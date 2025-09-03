@@ -2,8 +2,7 @@ import 'package:ecommerce/models/shop.dart';
 import 'package:ecommerce/pages/intro_page.dart';
 import 'package:ecommerce/pages/login_page.dart';
 import 'package:ecommerce/pages/register_page.dart';
-import 'package:ecommerce/register_screen.dart';
-import 'package:ecommerce/service/register_service.dart';
+import 'package:ecommerce/service/auth_service.dart';
 import 'package:ecommerce/service/supabase.dart';
 import 'package:ecommerce/themes/app_color.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +21,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => Shop()),
         ChangeNotifierProvider(create: (_) => RegisterService()),
+        ChangeNotifierProvider(create: (_) => LoginService())
       ],
       child: const Ecommerce(),
     ),

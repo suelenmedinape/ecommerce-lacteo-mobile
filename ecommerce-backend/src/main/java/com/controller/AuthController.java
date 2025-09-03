@@ -24,7 +24,7 @@ public class AuthController {
 
 	@Autowired
 	private ClientService clientService;
- 
+
 	@PostMapping("/register")
 	public ResponseEntity<Map<String, String>> register(@Valid @RequestBody RegisterClientDTO clientDTO) {
 		
