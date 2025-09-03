@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../components/my_button.dart';
+import '../service/user_logado.dart';
 
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+  
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
@@ -40,8 +42,16 @@ class IntroPage extends StatelessWidget {
 
             // button
             MyButton(
-              onTap: () => Navigator.pushNamed(context, '/shop_pages'), 
-              child: const Icon(Icons.arrow_forward)
+              onTap: () async {
+                /*bool logado = await estaLogado();
+
+                if (!logado) {*/
+                  Navigator.pushNamed(context, '/login_page');
+                /*} else {
+                  Navigator.pushNamed(context, '/shop_pages');
+                }*/
+              },
+              child: const Icon(Icons.arrow_forward),
             ),
           ],
         ),

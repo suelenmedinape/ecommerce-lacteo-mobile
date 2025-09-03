@@ -1,12 +1,12 @@
-
 import 'package:flutter/material.dart';
 
 ThemeData appColor = ThemeData(
   colorScheme: ColorScheme.light(
-    surface/*background*/: Colors.white,
+    surface /*background*/ : Colors.grey.shade100,
     primary: Colors.grey.shade200,
     secondary: Colors.white,
     inversePrimary: Colors.grey.shade700,
-    onSecondary: Colors.amber.shade500
-  )
+    onSecondary: Colors.amber.shade800,
+    outline: Colors.grey.shade400,
+  ),
 );
