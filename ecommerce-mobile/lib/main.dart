@@ -36,7 +36,7 @@ class Ecommerce extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const RegisterScreen(),
+      home: const IntroPage(),
       theme: appColor,
       routes: {
         '/intro_page': (context) => const IntroPage(),
