@@ -15,7 +15,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
-
+ 
   final supabase = Supabase.instance.client;
   final String backendUrl =
       'http://localhost:8080/auth/register';
