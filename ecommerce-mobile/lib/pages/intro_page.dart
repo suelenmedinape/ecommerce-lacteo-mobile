@@ -43,13 +43,13 @@ class IntroPage extends StatelessWidget {
             // button
             MyButton(
               onTap: () async {
-                /*bool logado = await estaLogado();
+                bool logado = await estaLogado();
 
-                if (!logado) {*/
+                if (!logado) {
                   Navigator.pushNamed(context, '/login_page');
-                /*} else {
+                } else {
                   Navigator.pushNamed(context, '/shop_pages');
-                }*/
+                }
               },
               child: const Icon(Icons.arrow_forward),
             ),
