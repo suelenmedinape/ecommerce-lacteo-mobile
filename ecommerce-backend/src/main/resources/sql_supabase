@@ -1,24 +1,21 @@
 
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Queijo Um', 10.0, 'Descrição do Queijo Um', 20, 'QUEIJO');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Queijo Dois', 19.67, 'Descrição do Queijo Dois', 10, 'QUEIJO');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Leite Um', 5.5, 'Descrição do Leite Um', 12, 'LEITE');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Leite Dois', 4.8, 'Descrição do Leite Dois', 22, 'LEITE');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Iogurte Um', 8.9, 'Descrição do Iogurte Um', 15, 'IOGURTE');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Iogurte Dois', 11.45, 'Descrição do Iogurte Dois', 15, 'IOGURTE');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Manteiga Um', 7.8, 'Descrição da Manteiga Um', 8, 'MANTEIGA');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Manteiga Dois', 13.5, 'Descrição da Manteiga Dois', 11, 'MANTEIGA');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Creme de Leite Um', 5.9, 'Descrição do Creme de Leite Um', 17, 'CREME_DE_LEITE');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Creme de Leite Dois', 8.25, 'Descrição do Creme de Leite Dois', 19, 'CREME_DE_LEITE');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Requeijão Um', 8.6, 'Descrição do Requeijão Um', 6, 'REQUEIJÃO');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Requeijão Dois', 12.2, 'Descrição do Requeijão Dois', 9, 'REQUEIJÃO');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Leite Condensado Um', 7.7, 'Descrição do Leite Condensado Um', 14, 'LEITE_CONDENSADO');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Leite Condensado Dois', 9.1, 'Descrição do Leite Condensado Dois', 13, 'LEITE_CONDENSADO');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Doce de Leite Um', 6.3, 'Descrição do Doce de Leite Um', 10, 'DOCE_DE_LEITE');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Doce de Leite Dois', 8.4, 'Descrição do Doce de Leite Dois', 12, 'DOCE_DE_LEITE');
-INSERT INTO tb_product (product_name, price, description, quantity, category) VALUES ('Doce de Leite Tres', 9.4, 'Descrição do Doce de Leite tres', 12, 'DOCE_DE_LEITE');
-
-INSERT INTO tb_cart (client_id) VALUES (1), (2), (3), (4);
-
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (1,'Queijo Um', 10.0, 'Descrição do Queijo Um', 20, 'QUEIJO');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (2,'Queijo Dois', 19.67, 'Descrição do Queijo Dois', 10, 'QUEIJO');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (3,'Leite Um', 5.5, 'Descrição do Leite Um', 12, 'LEITE');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (4,'Leite Dois', 4.8, 'Descrição do Leite Dois', 22, 'LEITE');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (5,'Iogurte Um', 8.9, 'Descrição do Iogurte Um', 15, 'IOGURTE');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (6,'Iogurte Dois', 11.45, 'Descrição do Iogurte Dois', 15, 'IOGURTE');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (7,'Manteiga Um', 7.8, 'Descrição da Manteiga Um', 8, 'MANTEIGA');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (8,'Manteiga Dois', 13.5, 'Descrição da Manteiga Dois', 11, 'MANTEIGA');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (9,'Creme de Leite Um', 5.9, 'Descrição do Creme de Leite Um', 17, 'CREME_DE_LEITE');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (10,'Creme de Leite Dois', 8.25, 'Descrição do Creme de Leite Dois', 19, 'CREME_DE_LEITE');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (11,'Requeijão Um', 8.6, 'Descrição do Requeijão Um', 6, 'REQUEIJÃO');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (12,'Requeijão Dois', 12.2, 'Descrição do Requeijão Dois', 9, 'REQUEIJÃO');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (13,'Leite Condensado Um', 7.7, 'Descrição do Leite Condensado Um', 14, 'LEITE_CONDENSADO');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (14,'Leite Condensado Dois', 9.1, 'Descrição do Leite Condensado Dois', 13, 'LEITE_CONDENSADO');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (15,'Doce de Leite Um', 6.3, 'Descrição do Doce de Leite Um', 10, 'DOCE_DE_LEITE');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (16,'Doce de Leite Dois', 8.4, 'Descrição do Doce de Leite Dois', 12, 'DOCE_DE_LEITE');
+INSERT INTO tb_product (id, product_name, price, description, quantity, category) VALUES (17,'Doce de Leite Tres', 9.4, 'Descrição do Doce de Leite tres', 12, 'DOCE_DE_LEITE');
 
 INSERT INTO tb_cart_item (cart_id, product_id, quantity, unit_price, total_price) VALUES (1, 1, 2, 10.0, 20.0);
 INSERT INTO tb_cart_item (cart_id, product_id, quantity, unit_price, total_price) VALUES (1, 5, 3, 8.9, 26.7);
