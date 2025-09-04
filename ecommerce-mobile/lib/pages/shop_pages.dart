@@ -9,9 +9,6 @@ class ShopPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // access products in shop
-    final products = context.watch<Shop>().shop;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -29,53 +26,73 @@ class ShopPage extends StatelessWidget {
       ),
       drawer: const MyDrawer(),
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 25),
+      body: FutureBuilder(
+        future: Provider.of<Shop>(context, listen: false).fetchProducts(),
+        builder: (context, snapshot) {
+          // enquanto carrega
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-          // shop subtitle
-          Padding(
-            padding: const EdgeInsets.only(left: 25, bottom: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Shop',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                ),
-                Text(
-                  'Pick from a selected list of premium products',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // se deu erro
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Erro: ${snapshot.error}"),
+            );
+          }
 
-          // product grid
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(15),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,          // duas colunas
-                crossAxisSpacing: 10,       // espaço horizontal
-                mainAxisSpacing: 10,        // espaço vertical
-                childAspectRatio: 0.7,      // controla altura x largura
+          // se deu certo
+          final products = context.watch<Shop>().shop;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 25),
+
+              // shop subtitle
+              Padding(
+                padding: const EdgeInsets.only(left: 25, bottom: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Shop',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ),
+                    Text(
+                      'Pick from a selected list of premium products',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return MyProductTile(product: product);
-              },
-            ),
-          ),
-        ],
+
+              // product grid
+              Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(15),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // duas colunas
+                    crossAxisSpacing: 10, // espaço horizontal
+                    mainAxisSpacing: 10, // espaço vertical
+                    childAspectRatio: 0.7, // altura x largura
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return MyProductTile(product: product);
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -9,31 +9,49 @@ class MyProductTile extends StatelessWidget {
 
   const MyProductTile({super.key, required this.product});
 
-  // add to cart
-  void addToCart(BuildContext context) {
-    // show a dialog box to ask user to confirm to add to cart
+  void quantity(BuildContext context) {
+    final controller = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Text('Add this item to your cart?'),
+        title: Text('Quantidade'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(hintText: 'Digite a quantidade'),
+        ),
         actions: [
-          //cancel button
-          MaterialButton(
+          TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel')
+            child: Text('Cancelar'),
           ),
-
-          // yes button
-          MaterialButton(
-            onPressed: () => {
-              // pop dialog box
-              Navigator.pop(context),
-
-              // add to cart
-              context.read<Shop>().addToCart(product)
+          TextButton(
+            onPressed: () {
+              final qty = int.tryParse(controller.text) ?? 1;
+              Provider.of<Shop>(context, listen: false).addToCart(product, qty);
+              Navigator.pop(context);
+              Navigator.pop(context); // fecha o "Add to cart" também
             },
-            child: Text('Yes')
+            child: Text('Adicionar'),
           ),
+        ],
+      ),
+    );
+  }
+
+  // add to cart
+  void addToCart(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text('Adicionar este item ao carrinho?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancelar'),
+          ),
+          TextButton(onPressed: () => quantity(context), child: Text('Sim')),
         ],
       ),
     );
@@ -66,7 +84,7 @@ class MyProductTile extends StatelessWidget {
                   ),
                   width: double.infinity,
                   padding: EdgeInsets.all(25),
-                  child: Image.asset(product.imagePath),
+                  //child: Image.asset(product.imagePath),
                 ),
               ),
 
@@ -78,10 +96,14 @@ class MyProductTile extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
 
-              //category 
+              //category
               Text(
-                'Queijo',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Theme.of(context).colorScheme.onSecondary),
+                product.category,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
               ),
 
               // product price + add to cart
