@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +18,8 @@ import com.domain.Cart;
 import com.domain.CartItem;
 import com.domain.Client;
 import com.dtos.CartItemDTO;
+import com.services.AuthenticatedUserService;
 import com.services.CartService;
-import com.services.ClientService;
 
 @RestController
 @RequestMapping("/cart")
@@ -28,15 +27,14 @@ import com.services.ClientService;
 public class CartItemController {
 
 	@Autowired
-	private CartService cartService;
+	private AuthenticatedUserService authenticatedUserService;
 	
 	@Autowired
-	private ClientService clientService;
+	private CartService cartService;
 	
 	@PostMapping("/add")
 	public ResponseEntity<Void> addItemToCart(@RequestBody CartItemDTO cartItemDTO){
-		String email =  SecurityContextHolder.getContext().getAuthentication().getName();
-		Client client = clientService.findByEmail(email);
+		Client client = (Client) authenticatedUserService.getCurrentClient();
 		cartService.addItemToCart(client.getId(), cartItemDTO.getProductId(), cartItemDTO.getQuantity());		
 		
 		return ResponseEntity.ok().build();
@@ -44,8 +42,7 @@ public class CartItemController {
 	
 	@GetMapping
 	public ResponseEntity<List<CartItem>> listCartItems(){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		Client client = clientService.findByEmail(email);
+		Client client = (Client) authenticatedUserService.getCurrentClient();
 		
 		Cart cart = cartService.findByClientId(client.getCart().getId());
 		
@@ -54,8 +51,7 @@ public class CartItemController {
 	
 	@DeleteMapping("/{productId}")
 	public ResponseEntity<Void> removeItemFromCart( @PathVariable Long productId){
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		Client client = clientService.findByEmail(email);
+		Client client = (Client) authenticatedUserService.getCurrentClient();
 		
 		cartService.removeProductByCartItems(client.getCart().getId(), productId);
 	
@@ -64,8 +60,7 @@ public class CartItemController {
 
 	@PutMapping("/update")
 	public ResponseEntity<Void> updateItemFromCart(@RequestBody CartItemDTO cartItemDTO){
-		String email =  SecurityContextHolder.getContext().getAuthentication().getName();
-		Client client = clientService.findByEmail(email);
+		Client client = (Client) authenticatedUserService.getCurrentClient();
 		cartService.addItemToCart(client.getId(), cartItemDTO.getProductId(), cartItemDTO.getQuantity());		
 		
 		return ResponseEntity.ok().build();
@@ -73,8 +68,7 @@ public class CartItemController {
 	
 	@PostMapping("/buy")
 	 public ResponseEntity<Void> buyItemsCart() {
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		Client client = clientService.findByEmail(email);
+		Client client = (Client) authenticatedUserService.getCurrentClient();
 		
 		cartService.buyItemsFromCart(client.getCart().getId());
         return ResponseEntity.ok().build();
