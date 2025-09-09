@@ -12,7 +12,7 @@ class ShopPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = productService.listProducts();
+    productService.listProducts();
 
     return Scaffold(
       appBar: AppBar(title: const Text("Shop Page"), centerTitle: true),

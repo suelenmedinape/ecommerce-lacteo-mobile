@@ -6,7 +6,7 @@ class MyProductTile extends StatelessWidget {
 
   const MyProductTile({super.key, required this.product});
 
-  void quantity(BuildContext context) {
+  /*void quantity(BuildContext context) {
     final controller = TextEditingController();
     showDialog(
       context: context,
@@ -21,7 +21,7 @@ class MyProductTile extends StatelessWidget {
         ],
       ),
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
