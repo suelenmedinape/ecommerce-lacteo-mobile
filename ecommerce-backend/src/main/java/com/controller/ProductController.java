@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,28 +36,9 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	
-	@PostMapping
-	@CrossOrigin(origins = "http://localhost:4201")
-    public ResponseEntity<Map<String, String>> insert(@Valid @RequestBody ProductDTO productDTO) {
-        Product product = new Product();
-        product.setProductName(productDTO.getProductName());
-        product.setDescription(productDTO.getDescription());
-        product.setPrice(productDTO.getPrice());
-        product.setQuantity(productDTO.getQuantity());
-        try {
-            Category category = Category.fromDescricao(productDTO.getCategories().toUpperCase());
-            product.setCategories(category);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message", "Categoria inválida: " + productDTO.getCategories()));
-        }
-    
-        productService.insert(product);
-        
-        Map<String, String> response = Map.of("message","Cadastro realizado com sucesso");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-	
+	/*
+	 * client / anonimo
+	 */
 	@GetMapping
 	public ResponseEntity<List<ProductSummaryDTO>> listProducts(){
 		List<Product> products = productService.listProducts();
@@ -66,20 +46,6 @@ public class ProductController {
 				.map(x -> new ProductSummaryDTO(x)).toList();
 		
 		return ResponseEntity.ok(productSummaryDTO);
-	}
-
-	@CrossOrigin(origins = "http://localhost:4201")
-	@GetMapping("/info-product-admin")
-	public ResponseEntity<List<Product>> listProductsAdmin(){
-		List<Product> products = productService.listProducts();	
-		return ResponseEntity.ok(products);
-	}
-	
-	
-	@GetMapping("/list-categories")
-	public ResponseEntity<List<String>> listAllCategories(){
-		List<String> categories = Arrays.stream(Category.values()).map(category -> category.getDescricao()).toList();
-		return ResponseEntity.ok(categories);
 	}
 	
 	@GetMapping("/list")
@@ -97,6 +63,14 @@ public class ProductController {
 	                .body(Map.of("message", "Categoria inválida: " + category));
 	    }
 	}
+	
+	@GetMapping("/list-categories")
+	public ResponseEntity<List<String>> listAllCategories(){
+		List<String> categories = Arrays.stream(Category.values()).map(category -> category.getDescricao()).toList();
+		return ResponseEntity.ok(categories);
+	}
+	
+
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductDTO> detailProduct(@PathVariable Long id){
@@ -114,7 +88,38 @@ public class ProductController {
 		return ResponseEntity.ok(dtos);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:4201")
+	@PostMapping
+    public ResponseEntity<Map<String, String>> insert(@Valid @RequestBody ProductDTO productDTO) {
+        Product product = new Product();
+        product.setProductName(productDTO.getProductName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setQuantity(productDTO.getQuantity());
+        product.setImageUrl(productDTO.getImageUrl());
+        try {
+            Category category = Category.fromDescricao(productDTO.getCategories().toUpperCase());
+            product.setCategories(category);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Categoria inválida: " + productDTO.getCategories()));
+        }
+    
+        productService.insert(product);
+        
+        Map<String, String> response = Map.of("message","Cadastro realizado com sucesso");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+	
+	/*
+	 * admin
+	 */
+
+	@GetMapping("/info-product-admin")
+	public ResponseEntity<List<Product>> listProductsAdmin(){
+		List<Product> products = productService.listProducts();	
+		return ResponseEntity.ok(products);
+	}
+	
 	@PutMapping("/{productId}")
 	public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @RequestBody ProductDTO dto){
 		productService.updateProduct(productId, dto);
@@ -122,7 +127,6 @@ public class ProductController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@CrossOrigin(origins = "http://localhost:4201")
 	@DeleteMapping("/{productId}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable Long productId){
 		productService.removeProduct(productId);
