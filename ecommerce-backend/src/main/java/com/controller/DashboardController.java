@@ -21,6 +21,10 @@ import com.services.DashboardService;
 @RestController
 @RequestMapping("/dashboard")
 public class DashboardController {
+	
+	/*
+	 * verificar essa classe
+	 */
 
 	@Autowired
 	private DashboardService dashboardService;

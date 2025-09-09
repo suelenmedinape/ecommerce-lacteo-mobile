@@ -22,6 +22,10 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	
+	/*
+	 * verificar essa classe
+	 */
+	
 	@GetMapping
 	public ResponseEntity<List<OrderDTO>> listAllOrders(){
 			

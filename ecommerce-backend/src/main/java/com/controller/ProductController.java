@@ -29,6 +29,10 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+	
+	/*
+	 * verificar essa classe
+	 */
 
 	@Autowired
 	private ProductService productService;
