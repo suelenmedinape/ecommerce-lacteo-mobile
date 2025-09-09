@@ -5,6 +5,7 @@ class ProductList {
   final double price;
   final int quantity;
   final String categories;
+  final String? imagePath;
 
   ProductList({
     required this.id,
@@ -12,6 +13,7 @@ class ProductList {
     required this.price,
     required this.quantity,
     required this.categories,
+    this.imagePath,
   });
 
   // Construtor para converter de JSON -> Product
@@ -22,6 +24,7 @@ class ProductList {
       price: (json['price'] as num).toDouble(),
       quantity: json['quantity'],
       categories: json['categories'],
+      imagePath: json['imageUrl'],
     );
   }
 }
