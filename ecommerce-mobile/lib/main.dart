@@ -2,6 +2,7 @@ import 'package:ecommerce/all/pages/home_page.dart';
 import 'package:ecommerce/client/pages/byCategory.dart';
 import 'package:ecommerce/client/pages/shop_page.dart';
 import 'package:ecommerce/client/service/product_service.dart';
+import 'package:ecommerce/product_upload_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,9 @@ class Ecommerce extends StatelessWidget {
         '/register_page': (context) => RegisterPage(),
         '/shop_pages': (context) => ShopPage(),
         '/byCategory': (context) => Bycategory(),
-        '/home_page': (context) => HomePage()
+        '/home_page': (context) => HomePage(),
+        '/product/insert' : (context) => ProductUploadTestScreen(),
+
         // '//productor_page': (context) => ??
       },
     );
