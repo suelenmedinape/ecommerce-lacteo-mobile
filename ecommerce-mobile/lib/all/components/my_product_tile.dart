@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/client/models/products.dart';
 import 'package:flutter/material.dart';
 
@@ -50,7 +51,20 @@ class MyProductTile extends StatelessWidget {
                   ),
                   width: double.infinity,
                   padding: EdgeInsets.all(25),
-                  //child: Image.asset(product.imagePath),
+                  child: product.imagePath != null
+                      ? CachedNetworkImage(
+                          imageUrl: product.imagePath!,
+                          placeholder: (context, url) =>
+                              Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          fit: BoxFit.cover,
+                        )
+                      : Icon(
+                          Icons.image_not_supported,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
                 ),
               ),
 
