@@ -1,4 +1,6 @@
 import 'package:ecommerce/all/components/my_list_tile.dart';
+import 'package:ecommerce/all/service/auth_service.dart';
+import 'package:ecommerce/all/service/user_logado.dart';
 import 'package:ecommerce/client/service/product_service.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +18,7 @@ class MyDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final ProductService productService = ProductService();
+    final LoginService loginService = LoginService();
 
     return Drawer(
       backgroundColor: theme.colorScheme.surface,
@@ -77,10 +80,20 @@ class MyDrawer extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  // Home
+                  MyListTile(
+                    text: 'Home',
+                    icon: Icons.home,
+                    onTap: () => {
+                      Navigator.pop(context),
+                      Navigator.pushNamed(context, '/home_page'),
+                    },
+                  ),
+
                   // Shop
                   MyListTile(
                     text: 'Shop',
-                    icon: Icons.home,
+                    icon: Icons.shopping_bag,
                     onTap: () => {
                       Navigator.pop(context),
                       Navigator.pushNamed(context, '/shop_pages'),
@@ -148,11 +161,14 @@ class MyDrawer extends StatelessWidget {
               child: MyListTile(
                 text: 'Exit',
                 icon: Icons.logout,
-                onTap: () => Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/intro_page',
-                  (route) => false,
-                ),
+                onTap: () async {
+                  await loginService.logoutSupa(context);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/intro_page',
+                    (route) => false,
+                  );
+                },
               ),
             ),
           ],

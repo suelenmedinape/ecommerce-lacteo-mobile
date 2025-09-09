@@ -50,10 +50,17 @@ class RegisterService extends ChangeNotifier {
 
       if (backendResponse.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Cadastro realizado com sucesso realizando login!")),
+          const SnackBar(
+            content: Text("Cadastro realizado com sucesso realizando login!"),
+          ),
         );
-        
-        await loginService.login(email: email, password: password, formKey: formKey, context: context);
+
+        await loginService.login(
+          email: email,
+          password: password,
+          formKey: formKey,
+          context: context,
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erro do backend: ${backendResponse.body}")),
@@ -98,12 +105,12 @@ class LoginService extends ChangeNotifier {
       }
 
       final accessToken = response.session?.accessToken;
-      
+
       await salvarLogin(accessToken!);
       /*if (getRole() == 'ROLE_ADMIN') {
         Navigator.pushNamed(context, '/productor_page');
       } else {*/
-        Navigator.pushNamed(context, '/shop_pages');
+      Navigator.pushNamed(context, '/shop_pages');
       //}
     } catch (e) {
       ScaffoldMessenger.of(
@@ -116,4 +123,15 @@ class LoginService extends ChangeNotifier {
   }
 
   // logout()
+  Future<void> logoutSupa(BuildContext context) async {
+    try {
+      await Supabase.instance.client.auth.signOut();
+      await logout();
+
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Erro ao sair: $e")));
+    }
+  }
 }

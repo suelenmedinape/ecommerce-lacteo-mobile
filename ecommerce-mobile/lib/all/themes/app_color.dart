@@ -6,7 +6,7 @@ ThemeData appColor = ThemeData(
     primary: Colors.grey.shade200,
     secondary: Colors.white,
     inversePrimary: Colors.grey.shade700,
-    onSecondary: Colors.amber.shade800,
+    onSecondary: Colors.amber.shade900,
     outline: Colors.grey.shade400,
   ),
 );

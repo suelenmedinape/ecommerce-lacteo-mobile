@@ -1,3 +1,4 @@
+import 'package:ecommerce/client/components/header.dart';
 import 'package:flutter/material.dart';
 
 import '../../all/components/my_drawer.dart';
@@ -19,50 +20,8 @@ class Bycategory extends StatelessWidget {
       drawer: MyDrawer(),
       body: Column(
         children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.home,
-                  size: 15,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                Text(
-                  ' Home',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 15,
-                  ),
-                ),
-                Icon(
-                  Icons.keyboard_arrow_right,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                Text(
-                  ' Products',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 15,
-                  ),
-                ),
-                Icon(
-                  Icons.keyboard_arrow_right,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                Text(
-                  ' $category',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          MyHeader(category: category,),
+
           const SizedBox(height: 10),
 
           // lista de produtos da categoria

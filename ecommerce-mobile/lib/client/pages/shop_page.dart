@@ -1,4 +1,5 @@
 import 'package:ecommerce/all/components/my_product_tile.dart';
+import 'package:ecommerce/client/components/header.dart';
 import 'package:ecommerce/client/service/product_service.dart';
 import 'package:flutter/material.dart';
 
@@ -19,38 +20,7 @@ class ShopPage extends StatelessWidget {
       drawer: MyDrawer(),
       body: Column(
         children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.home,
-                  size: 15,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                Text(
-                  ' Home',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 15,
-                  ),
-                ),
-                Icon(
-                  Icons.keyboard_arrow_right,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                Text(
-                  ' Products',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          MyHeader(),
 
           const SizedBox(height: 10),
 

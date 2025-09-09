@@ -1,5 +1,7 @@
+import 'package:ecommerce/all/pages/home_page.dart';
 import 'package:ecommerce/client/pages/byCategory.dart';
 import 'package:ecommerce/client/pages/shop_page.dart';
+import 'package:ecommerce/client/service/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ProductService()),
         ChangeNotifierProvider(create: (_) => RegisterService()),
         ChangeNotifierProvider(create: (_) => LoginService())
       ],
@@ -41,7 +44,8 @@ class Ecommerce extends StatelessWidget {
         '/login_page': (context) => LoginPage(),
         '/register_page': (context) => RegisterPage(),
         '/shop_pages': (context) => ShopPage(),
-        '/byCategory': (context) => Bycategory()
+        '/byCategory': (context) => Bycategory(),
+        '/home_page': (context) => HomePage()
         // '//productor_page': (context) => ??
       },
     );
