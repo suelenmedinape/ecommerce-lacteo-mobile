@@ -48,6 +48,8 @@ class IntroPage extends StatelessWidget {
                 if (!logado) {
                   Navigator.pushNamed(context, '/login_page');
                 } else {
+                  // if (role.user === 'ROLE_ADMIN') {
+                  // Navigator.pushNamed(context, '/productor_page'); } else {}
                   Navigator.pushNamed(context, '/shop_pages');
                 }
               },

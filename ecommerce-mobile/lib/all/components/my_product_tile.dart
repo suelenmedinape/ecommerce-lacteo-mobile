@@ -1,8 +1,7 @@
-import 'package:ecommerce/models/shop.dart';
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/product.dart';
+import '../backup/models/product.dart';
 
 class MyProductTile extends StatelessWidget {
   final Product product;
@@ -27,11 +26,27 @@ class MyProductTile extends StatelessWidget {
             child: Text('Cancelar'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               final qty = int.tryParse(controller.text) ?? 1;
-              Provider.of<Shop>(context, listen: false).addToCart(product, qty);
-              Navigator.pop(context);
-              Navigator.pop(context); // fecha o "Add to cart" também
+              /*final success = await Provider.of<Shop>(
+                context,
+                listen: false,
+              ).addToCart(product, qty);
+
+              if (success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Produto adicionado ao carrinho!"),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Erro ao adicionar o produto.")),
+                );
+              }*/
+
+              Navigator.pop(context); // fecha dialog quantidade
+              Navigator.pop(context); // fecha dialog "Adicionar ao carrinho"
             },
             child: Text('Adicionar'),
           ),
@@ -132,4 +147,4 @@ class MyProductTile extends StatelessWidget {
       ),
     );
   }
-}
+}*/

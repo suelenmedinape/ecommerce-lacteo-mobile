@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:ecommerce/service/user_logado.dart';
+import 'package:ecommerce/all/service/user_logado.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class RegisterService extends ChangeNotifier {
   bool _loading = false;
   bool get loading => _loading;
+  final LoginService loginService = LoginService();
 
   final supabase = Supabase.instance.client;
   final String backendUrl = "http://localhost:8080/auth/register";
@@ -49,9 +50,10 @@ class RegisterService extends ChangeNotifier {
 
       if (backendResponse.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Cadastro realizado com sucesso!")),
+          const SnackBar(content: Text("Cadastro realizado com sucesso realizando login!")),
         );
-        Navigator.pushNamed(context, '/login_page');
+        
+        await loginService.login(email: email, password: password, formKey: formKey, context: context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erro do backend: ${backendResponse.body}")),
@@ -98,8 +100,11 @@ class LoginService extends ChangeNotifier {
       final accessToken = response.session?.accessToken;
       
       await salvarLogin(accessToken!);
-      Navigator.pushNamed(context, '/shop_pages');
-
+      /*if (getRole() == 'ROLE_ADMIN') {
+        Navigator.pushNamed(context, '/productor_page');
+      } else {*/
+        Navigator.pushNamed(context, '/shop_pages');
+      //}
     } catch (e) {
       ScaffoldMessenger.of(
         context,
@@ -109,4 +114,6 @@ class LoginService extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // logout()
 }

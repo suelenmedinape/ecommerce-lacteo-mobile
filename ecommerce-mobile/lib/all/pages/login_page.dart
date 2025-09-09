@@ -1,6 +1,6 @@
-import 'package:ecommerce/components/my_button.dart';
-import 'package:ecommerce/components/my_textfield.dart';
-import 'package:ecommerce/service/auth_service.dart';
+import 'package:ecommerce/all/components/my_button.dart';
+import 'package:ecommerce/all/components/my_textfield.dart';
+import 'package:ecommerce/all/service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
