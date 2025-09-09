@@ -1,3 +1,5 @@
+import 'package:ecommerce/client/pages/byCategory.dart';
+import 'package:ecommerce/client/pages/shop_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +40,8 @@ class Ecommerce extends StatelessWidget {
         '/intro_page': (context) => const IntroPage(),
         '/login_page': (context) => LoginPage(),
         '/register_page': (context) => RegisterPage(),
+        '/shop_pages': (context) => ShopPage(),
+        '/byCategory': (context) => Bycategory()
         // '//productor_page': (context) => ??
       },
     );

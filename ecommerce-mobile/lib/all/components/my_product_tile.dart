@@ -1,62 +1,13 @@
-/*import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../backup/models/product.dart';
+import 'package:ecommerce/client/models/products.dart';
+import 'package:flutter/material.dart';
 
 class MyProductTile extends StatelessWidget {
-  final Product product;
+  final ProductList product;
 
   const MyProductTile({super.key, required this.product});
 
   void quantity(BuildContext context) {
     final controller = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Quantidade'),
-        content: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(hintText: 'Digite a quantidade'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final qty = int.tryParse(controller.text) ?? 1;
-              /*final success = await Provider.of<Shop>(
-                context,
-                listen: false,
-              ).addToCart(product, qty);
-
-              if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Produto adicionado ao carrinho!"),
-                  ),
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Erro ao adicionar o produto.")),
-                );
-              }*/
-
-              Navigator.pop(context); // fecha dialog quantidade
-              Navigator.pop(context); // fecha dialog "Adicionar ao carrinho"
-            },
-            child: Text('Adicionar'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // add to cart
-  void addToCart(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -107,13 +58,13 @@ class MyProductTile extends StatelessWidget {
 
               //product name
               Text(
-                product.name,
+                product.productName,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
 
               //category
               Text(
-                product.category,
+                product.categories,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
@@ -135,7 +86,7 @@ class MyProductTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: IconButton(
-                      onPressed: () => addToCart(context),
+                      onPressed: () {},
                       icon: const Icon(Icons.add),
                     ),
                   ),
@@ -147,4 +98,4 @@ class MyProductTile extends StatelessWidget {
       ),
     );
   }
-}*/
+}

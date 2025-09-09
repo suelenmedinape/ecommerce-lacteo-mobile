@@ -1,4 +1,5 @@
 import 'package:ecommerce/all/components/my_list_tile.dart';
+import 'package:ecommerce/client/service/product_service.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -14,6 +15,7 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final ProductService productService = ProductService();
 
     return Drawer(
       backgroundColor: theme.colorScheme.surface,
@@ -59,10 +61,7 @@ class MyDrawer extends StatelessWidget {
                         ),
                         Text(
                           email,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -78,31 +77,72 @@ class MyDrawer extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-
-                  // shop tile
+                  // Shop
                   MyListTile(
                     text: 'Shop',
                     icon: Icons.home,
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => {
+                      Navigator.pop(context),
+                      Navigator.pushNamed(context, '/shop_pages'),
+                    },
                   ),
 
-                  // cart tile
+                  // Cart
                   MyListTile(
                     text: 'Cart',
                     icon: Icons.shopping_cart,
                     onTap: () {
-                      // pop drawer first
                       Navigator.pop(context);
-
-                      // go to cart page
                       Navigator.pushNamed(context, '/cart_pages');
                     },
+                  ),
+
+                  // Categorias dinâmicas
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25.0),
+                    child: FutureBuilder<List<String>>(
+                      future: productService.listCategory(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Erro: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          final categories = snapshot.data!;
+                          return ExpansionTile(
+                            leading: Icon(Icons.category, color: Colors.grey),
+                            title: const Text('Categorias'),
+                            children: categories.map((category) {
+                              return MyListTile(
+                                text: category,
+                                icon: Icons
+                                    .label_important_outline, // ou outro ícone
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/byCategory',
+                                    arguments:
+                                        category, // passa a categoria como argumento
+                                  );
+                                },
+                              );
+                            }).toList(),
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
 
-            // exit shop tile
+            // Exit
             Padding(
               padding: const EdgeInsets.only(bottom: 25.0),
               child: MyListTile(
