@@ -81,7 +81,9 @@ class _CartPageState extends State<CartPage> {
                               ),
                               IconButton(
                                 onPressed: () async {
-                                  await cartService.removeToCart(product.product.id);
+                                  await cartService.removeToCart(
+                                    product.product.id,
+                                  );
                                 },
                                 icon: const Icon(
                                   Icons.restore_from_trash,
@@ -124,8 +126,29 @@ class _CartPageState extends State<CartPage> {
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed: () {
-                          // concluir pedido
+                        onPressed: () async {
+                          final cartService = context.read<CartService>();
+                          final errorMessage = await cartService.buyItemsCart(
+                            0,
+                          ); // passe o productId se necessário
+
+                          if (errorMessage == null) {
+                            // Sucesso
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Pedido concluído com sucesso!"),
+                              ),
+                            );
+                          } else {
+                            // Erro
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Você precisa adicionar seu endereço. Redirecionando...')),
+                            );
+
+                            Future.delayed(Duration(seconds: 2), () {
+                              Navigator.pushNamed(context, '/address_page');
+                            });
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,

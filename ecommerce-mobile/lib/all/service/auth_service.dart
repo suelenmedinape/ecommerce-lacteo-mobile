@@ -135,28 +135,3 @@ class LoginService extends ChangeNotifier {
   }
 }
 
-class AuthService extends ChangeNotifier {
-  final url = 'http://localhost:8080/my';
-
-  Future<Map<String, dynamic>?> clientDetails() async {
-    final token = await getToken();
-
-    if (token == null) {
-      return null;
-    }
-
-    final response = await http.get(
-      Uri.parse('$url/profile'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      return null;
-    }
-  }
-}

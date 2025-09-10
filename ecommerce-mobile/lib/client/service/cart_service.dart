@@ -88,11 +88,35 @@ class CartService extends ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      await listCartItems(); 
+      await listCartItems();
       return true;
     } else {
       print("Erro ao atualizar: ${response.statusCode} - ${response.body}");
       return false;
+    }
+  }
+
+  Future<String?> buyItemsCart(int productId) async {
+    final token = await getToken();
+
+    final response = await http.post(
+      Uri.parse('$url/buy'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      await listCartItems();
+      return null; // null significa que não houve erro
+    } else {
+      final data = jsonDecode(response.body);
+      if (data != null && data['message'] != null) {
+        return data['message']; // retorna a mensagem do backend
+      } else {
+        return "Erro desconhecido";
+      }
     }
   }
 }
