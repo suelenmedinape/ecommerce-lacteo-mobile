@@ -50,7 +50,7 @@ class IntroPage extends StatelessWidget {
                 } else {
                   // if (role.user === 'ROLE_ADMIN') {
                   // Navigator.pushNamed(context, '/productor_page'); } else {}
-                  Navigator.pushNamed(context, '/home_page');
+                  Navigator.pushNamed(context, '/shop_pages');
                 }
               },
               child: const Icon(Icons.arrow_forward),
