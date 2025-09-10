@@ -51,6 +51,7 @@ class IntroPage extends StatelessWidget {
                   // if (role.user === 'ROLE_ADMIN') {
                   // Navigator.pushNamed(context, '/productor_page'); } else {}
                   Navigator.pushNamed(context, '/shop_pages');
+                  print('clicado');
                 }
               },
               child: const Icon(Icons.arrow_forward),

@@ -16,8 +16,19 @@ class ShopPage extends StatelessWidget {
     productService.listProducts();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Shop Page"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Shop Page"),
+        centerTitle: true,
+        actions: [
+          // go to cart button
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, '/cart_pages'),
+            icon: const Icon(Icons.shopping_cart_outlined),
+          ),
+        ],
+      ),
       drawer: MyDrawer(),
+
       body: Column(
         children: [
           MyHeader(),

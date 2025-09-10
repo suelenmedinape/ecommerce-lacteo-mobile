@@ -1,28 +1,61 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/client/models/products.dart';
+import 'package:ecommerce/client/service/cart_service.dart';
 import 'package:flutter/material.dart';
+
+import 'my_textfield.dart';
 
 class MyProductTile extends StatelessWidget {
   final ProductList product;
 
   const MyProductTile({super.key, required this.product});
 
-  /*void quantity(BuildContext context) {
+  void add(BuildContext context, int productId) {
     final controller = TextEditingController();
+    final CartService cartService = CartService();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Text('Adicionar este item ao carrinho?'),
+        title: const Text('Adicionar ao Carrinho'),
+        content: MyTextFormField(
+          controller: controller,
+          hintText: 'Quantidade',
+          obscureText: false,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
+            style: TextButton.styleFrom(foregroundColor: Colors.grey),
+            child: const Text('Cancelar'),
           ),
-          TextButton(onPressed: () => quantity(context), child: Text('Sim')),
+          TextButton(
+            onPressed: () async {
+              final quantity = int.tryParse(controller.text) ?? 1;
+
+              Navigator.pop(context); // fecha o diálogo
+
+              final success = await cartService.addToCart(quantity, productId);
+
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      success
+                          ? 'Produto adicionado ao carrinho!'
+                          : 'Erro ao adicionar.',
+                    ),
+                  ),
+                );
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.amber),
+            child: const Text('Adicionar'),
+          ),
         ],
       ),
     );
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +133,9 @@ class MyProductTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        add(context, product.id);
+                      },
                       icon: const Icon(Icons.add),
                     ),
                   ),

@@ -1,5 +1,7 @@
 import 'package:ecommerce/client/pages/byCategory.dart';
+import 'package:ecommerce/client/pages/cart_page.dart';
 import 'package:ecommerce/client/pages/shop_page.dart';
+import 'package:ecommerce/client/service/cart_service.dart';
 import 'package:ecommerce/client/service/product_service.dart';
 import 'package:ecommerce/product_upload_test.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ProductService()),
         ChangeNotifierProvider(create: (_) => RegisterService()),
-        ChangeNotifierProvider(create: (_) => LoginService())
+        ChangeNotifierProvider(create: (_) => LoginService()),
+        ChangeNotifierProvider(create: (_) => CartService())
       ],
       child: const Ecommerce(),
     ),
@@ -46,7 +49,7 @@ class Ecommerce extends StatelessWidget {
         '/shop_pages': (context) => ShopPage(),
         '/byCategory': (context) => Bycategory(),
         '/product/insert' : (context) => ProductUploadTestScreen(),
-
+        '/cart_pages': (context) => CartPage()
         // '//productor_page': (context) => ??
       },
     );
