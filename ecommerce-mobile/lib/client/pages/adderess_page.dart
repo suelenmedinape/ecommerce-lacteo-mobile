@@ -25,43 +25,71 @@ class _AddressPageState extends State<AddressPage> {
   final neighborhoodController = TextEditingController();
   final stateController = TextEditingController();
 
+  // 1. Declare a variável como um membro da classe State.
+  // Inicia como `false` por padrão.
+  bool _isEditingAddress = false;
+  bool _isDataInitialized = false;
+
   @override
-  void initState() {
-    super.initState();
-
-    // busca os dados do cliente quando abrir a tela
-    Future.microtask(() async {
-      final clientService = context.read<ClientService>();
-      await clientService.clientDetails();
-
-      // quando os dados chegarem, preenche os controllers
-      final data = clientService.client;
-      if (data != null) {
-        nameController.text = data['name'] ?? '';
-        phoneController.text = data['phone'] ?? '';
-        cpfController.text = data['cpf'] ?? '';
-
-        if (data['address'] != null) {
-          streetController.text = data['address']['street'] ?? '';
-          numberController.text = data['address']['number'] ?? '';
-          cityController.text = data['address']['city'] ?? '';
-          neighborhoodController.text = data['address']['neighborhood'] ?? '';
-          stateController.text = data['address']['state'] ?? '';
-        }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // Usamos didChangeDependencies porque ele é chamado depois do initState
+    // e nos dá acesso seguro ao context. É o lugar ideal para usar ModalRoute.
+    // O `_isDataInitialized` previne que este código rode múltiplas vezes.
+    if (!_isDataInitialized) {
+      final arguments = ModalRoute.of(context)?.settings.arguments;
+      
+      // Verifica se o argumento é um booleano e se é true.
+      if (arguments is bool && arguments == true) {
+        setState(() {
+          _isEditingAddress = true;
+        });
+        // Se estiver editando, busca os dados para preencher o formulário.
+        _loadClientData();
       }
-    });
+      _isDataInitialized = true;
+    }
+  }
+
+  // Método para carregar os dados do cliente e preencher os campos
+  Future<void> _loadClientData() async {
+    final clientService = context.read<ClientService>();
+    
+    // Se o cliente ainda não foi carregado, carrega agora.
+    if (clientService.client == null) {
+      await clientService.clientDetail();
+    }
+
+    final clientData = clientService.client;
+    if (clientData != null && mounted) { // `mounted` verifica se o widget ainda está na tela
+      nameController.text = clientData.name;
+      phoneController.text = clientData.phone ?? '';
+      cpfController.text = clientData.cpf ?? '';
+      
+      if (clientData.address != null) {
+        streetController.text = clientData.address!.street;
+        numberController.text = clientData.address!.number;
+        cityController.text = clientData.address!.city;
+        neighborhoodController.text = clientData.address!.neighborhood;
+        stateController.text = clientData.address!.state;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final clientService = context.watch<ClientService>();
+    
+    // Define o título da página dinamicamente
+    final pageTitle = _isEditingAddress ? "Editar Meus Dados" : "Adicionar Novo Endereço";
 
-    if (clientService.loading && clientService.client == null) {
+    if (clientService.loading && _isEditingAddress && clientService.client == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Meus Dados")),
+      appBar: AppBar(title: Text(pageTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -69,7 +97,6 @@ class _AddressPageState extends State<AddressPage> {
           child: Column(
             children: [
               const SizedBox(height: 50),
-              // logo
               SvgPicture.asset(
                 'assets/icons/cow-auth.svg',
                 width: 100,
@@ -87,6 +114,7 @@ class _AddressPageState extends State<AddressPage> {
                 hintText: "Telefone",
                 obscureText: false,
               ),
+              // ... resto dos seus TextFormFields
               const SizedBox(height: 15),
               MyTextFormField(
                 controller: cpfController,
@@ -129,7 +157,7 @@ class _AddressPageState extends State<AddressPage> {
                 textButtonName: "Salvar",
                 loading: clientService.loading,
                 onTap: () async {
-                  final updated = await clientService.updateDetailsClient({
+                  final clientData = {
                     "name": nameController.text,
                     "phone": phoneController.text,
                     "cpf": cpfController.text,
@@ -140,17 +168,28 @@ class _AddressPageState extends State<AddressPage> {
                       "neighborhood": neighborhoodController.text,
                       "state": stateController.text,
                     },
-                  });
+                  };
 
-                  if (updated) {
+                  final success = await clientService.updateDetailsClient(clientData);
+
+                  if (success && mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Dados atualizados com sucesso! Retornando ao Carrinho..."),
+                        content: Text("Dados salvos com sucesso!"),
+                        backgroundColor: Colors.green,
                       ),
                     );
-                    Future.delayed(Duration(seconds: 2), () {
-                      Navigator.pushNamed(context, '/cart_pages');
-                    });
+                    // 3. Padrão recomendado: Em vez de empurrar uma nova rota,
+                    // simplesmente volte para a tela anterior.
+                    // Isso torna seu componente muito mais reutilizável.
+                    Navigator.pop(context);
+                  } else if (mounted) {
+                     ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Ocorreu um erro ao salvar."),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 },
               ),

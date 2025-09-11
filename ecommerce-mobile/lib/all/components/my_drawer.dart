@@ -11,78 +11,34 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Instanciar os services aqui é ok, já que são usados pontualmente
     final ProductService productService = ProductService();
     final LoginService loginService = LoginService();
-
-    final clientService = context.watch<ClientService>();
-    final dados = clientService.client;
 
     return Drawer(
       backgroundColor: theme.colorScheme.surface,
       child: Column(
         children: [
-          const SizedBox(height: 25),
+          // ALTERAÇÃO: Substituímos toda a lógica do cabeçalho
+          // por um widget dedicado e limpo.
+          const _DrawerHeader(),
 
-          // 🔹 Header observando o provider
-          if (clientService.loading && dados == null)
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: CircularProgressIndicator(),
-            )
-          else if (dados == null)
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text("Erro ao carregar dados"),
-            )
-          else
-            SafeArea(
-              bottom: false,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 28,
-                      child: Text(
-                        (dados['name'] ?? 'U')[0].toUpperCase(),
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          dados['name'] ?? "Usuário",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          dados['email'] ?? "Sem e-mail",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-          const SizedBox(height: 25),
-
-          // 🔹 itens
+          // 🔹 itens da lista (o resto do seu código permanece igual)
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
                 MyListTile(
+                  text: 'Profile',
+                  icon: Icons.person_outline, // Ícone mais apropriado
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/profile_page');
+                  },
+                ),
+                MyListTile(
                   text: 'Shop',
-                  icon: Icons.shopping_bag,
+                  icon: Icons.store_outlined, // Ícone mais apropriado
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/shop_pages');
@@ -90,7 +46,7 @@ class MyDrawer extends StatelessWidget {
                 ),
                 MyListTile(
                   text: 'Cart',
-                  icon: Icons.shopping_cart,
+                  icon: Icons.shopping_cart_outlined,
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/cart_pages');
@@ -109,7 +65,10 @@ class MyDrawer extends StatelessWidget {
                       } else if (snapshot.hasData) {
                         final categories = snapshot.data!;
                         return ExpansionTile(
-                          leading: const Icon(Icons.category, color: Colors.grey),
+                          leading: const Icon(
+                            Icons.category,
+                            color: Colors.grey,
+                          ),
                           title: const Text('Categorias'),
                           children: categories.map((category) {
                             return MyListTile(
@@ -119,7 +78,7 @@ class MyDrawer extends StatelessWidget {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
                                   context,
-                                  '/byCategory',
+                                  '/byCategory_page',
                                   arguments: category,
                                 );
                               },
@@ -153,6 +112,87 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// WIDGET ADICIONADO: Responsável por carregar e exibir o cabeçalho
+class _DrawerHeader extends StatefulWidget {
+  const _DrawerHeader();
+
+  @override
+  State<_DrawerHeader> createState() => _DrawerHeaderState();
+}
+
+class _DrawerHeaderState extends State<_DrawerHeader> {
+  @override
+  void initState() {
+    super.initState();
+    // Garante que os dados do cliente sejam carregados assim que o Drawer for construído
+    Future.microtask(() {
+      context.read<ClientService>().clientDetail();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Usamos 'watch' para que o widget reconstrua quando os dados chegarem
+    final clientService = context.watch<ClientService>();
+    final client = clientService.client;
+
+    // A lógica de UI que estava no Column agora está aqui
+    if (clientService.loading && client == null) {
+      return const SizedBox(
+        height: 120, // Altura fixa para não "pular" a UI
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (client == null) {
+      return const SizedBox(
+        height: 120,
+        child: Center(child: Text("Bem-vindo(a)!")),
+      );
+    }
+
+    return SafeArea(
+      bottom: false,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 28,
+              child: Text(
+                client.name.isNotEmpty ? client.name[0].toUpperCase() : "U",
+                style: const TextStyle(fontSize: 20),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Usamos Flexible para evitar overflow se o nome/email for muito longo
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    client.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    client.email,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

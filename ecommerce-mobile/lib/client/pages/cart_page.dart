@@ -146,7 +146,7 @@ class _CartPageState extends State<CartPage> {
                             );
 
                             Future.delayed(Duration(seconds: 2), () {
-                              Navigator.pushNamed(context, '/address_page');
+                              Navigator.pushNamed(context, '/address_page', arguments: false);
                             });
                           }
                         },

@@ -1,5 +1,7 @@
+import 'package:ecommerce/client/pages/adderess_page.dart';
 import 'package:ecommerce/client/pages/byCategory_page.dart';
 import 'package:ecommerce/client/pages/cart_page.dart';
+import 'package:ecommerce/client/pages/profile_page.dart';
 import 'package:ecommerce/client/pages/shop_page.dart';
 import 'package:ecommerce/client/service/cart_service.dart';
 import 'package:ecommerce/client/service/client_service.dart';
@@ -51,6 +53,8 @@ class Ecommerce extends StatelessWidget {
         '/shop_pages': (context) => ShopPage(),
         '/byCategory_page': (context) => Bycategory(),
         '/product/insert': (context) => ProductUploadTestScreen(),
+        '/profile_page': (context) => ProfilePage(),
+        '/address_page': (context) => AddressPage(),
         '/cart_pages': (context) => CartPage()
         // '//productor_page': (context) => ??
       },

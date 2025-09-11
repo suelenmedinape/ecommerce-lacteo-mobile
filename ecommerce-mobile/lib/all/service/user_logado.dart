@@ -2,29 +2,40 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+// Use a mesma chave para salvar e buscar!
+const String _authTokenKey = 'flutter.auth_token';
+
 Future<void> salvarLogin(String token) async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('auth_token', token);
+  // Salva na mesma chave que o Supabase usa.
+  await prefs.setString(_authTokenKey, token); 
 }
 
 Future<bool> estaLogado() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.containsKey('auth_token');
+  return prefs.containsKey(_authTokenKey);
 }
 
 Future<void> logout() async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('auth_token');
+  await prefs.remove(_authTokenKey);
+  // É uma boa prática também fazer logout do Supabase.
+  await Supabase.instance.client.auth.signOut();
 }
 
 Future<String?> getToken() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('auth_token'); 
-}
+  String? token = prefs.getString(_authTokenKey); 
 
-Future<String?> getRole() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_role');
+  if (token != null) {
+    // *** A CORREÇÃO PRINCIPAL ESTÁ AQUI ***
+    // Se o token começar e terminar com aspas, remova-as.
+    if (token.startsWith('"') && token.endsWith('"')) {
+      token = token.substring(1, token.length - 1);
+    }
+  }
+  
+  return token;
 }
 
 Future<String?> getUserRoleFromToken() async {

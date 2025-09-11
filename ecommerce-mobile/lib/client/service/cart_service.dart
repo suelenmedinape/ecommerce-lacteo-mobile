@@ -24,7 +24,7 @@ class CartService extends ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      await listCartItems(); // atualiza a lista local
+      await listCartItems(); 
       return true;
     } else {
       print("Erro ao adicionar: ${response.statusCode} - ${response.body}");

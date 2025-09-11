@@ -1,16 +1,16 @@
 import 'dart:convert';
-
+import 'package:ecommerce/client/models/client.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import '../../all/service/user_logado.dart';
 
 class ClientService extends ChangeNotifier {
   final url = 'http://localhost:8080/my';
-  Map<String, dynamic>? client;
+  Client? client; // agora usamos o model
   bool loading = false;
 
-  Future<void> clientDetails() async {
+  // Carregar detalhes do cliente
+  Future<void> clientDetail() async {
     loading = true;
     notifyListeners();
 
@@ -30,7 +30,8 @@ class ClientService extends ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      client = jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      client = Client.fromJson(data);
     } else {
       client = null;
     }
@@ -39,30 +40,50 @@ class ClientService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> updateDetailsClient(Map<String, dynamic> object) async {
+  // Atualizar detalhes
+  Future<bool> updateDetailsClient(Map<String, dynamic> data) async {
     final token = await getToken();
-
-    if (token == null) return false;
+    if (token == null) {
+      print("Erro de autenticação: Token não encontrado.");
+      return false;
+    }
 
     loading = true;
     notifyListeners();
 
-    final response = await http.put(
-      Uri.parse('$url/details'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(object),
-    );
+    try {
+      final response = await http.put(
+        Uri.parse('$url/details'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
+      );
 
-    if (response.statusCode == 200) {
-      client = object; // atualiza cache local
-      loading = false;
-      notifyListeners();
-      return true;
-    } else {
-      print("Erro ao atualizar: ${response.statusCode} - ${response.body}");
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        // *** A CORREÇÃO ESTÁ AQUI ***
+        // O backend retornou sucesso (2xx), mas com corpo vazio.
+        // Não tentamos mais fazer o jsonDecode. Apenas confirmamos o sucesso.
+
+        // Opcional: Para manter o app atualizado, você pode chamar um método
+        // para buscar os dados do cliente novamente ou atualizar localmente.
+        // Por agora, vamos apenas finalizar a operação.
+
+        print("Dados atualizados com sucesso no backend!");
+        loading = false;
+        notifyListeners();
+        return true;
+      } else {
+        // A API retornou um código de erro (4xx, 5xx)
+        print("Erro ao atualizar: ${response.statusCode} - ${response.body}");
+        loading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      // Ocorreu um erro na requisição (ex: sem internet)
+      print("Uma exceção ocorreu: $e");
       loading = false;
       notifyListeners();
       return false;
