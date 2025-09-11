@@ -8,18 +8,20 @@ class Client {
   Client({
     required this.name,
     required this.email,
-     this.phone,
-     this.address,
-     this.cpf,
+    this.phone,
+    this.address,
+    this.cpf,
   });
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      phone: json['phone'] ?? '',
-      address: Address.fromJson(json['address']),
-      cpf: json['cpf'] ?? '',
+      name: json['name'],
+      email: json['email'],
+      phone: json['phone'],
+      cpf: json['cpf'],
+      address: json['address'] != null
+          ? Address.fromJson(json['address'])
+          : null,
     );
   }
 }
@@ -27,7 +29,7 @@ class Client {
 class Address {
   final int id;
   final String street;
-  final String number;
+  final String number; // 🔹 String para evitar parse
   final String city;
   final String neighborhood;
   final String state;
@@ -43,12 +45,12 @@ class Address {
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
-      id: json['id'] ?? 0,
-      street: json['street'] ?? '',
-      number: json['number']?.toString() ?? '', // garante string
-      city: json['city'] ?? '',
-      neighborhood: json['neighborhood'] ?? '',
-      state: json['state'] ?? '',
+      id: json['id'],
+      street: json['street'],
+      number: json['number'].toString(),
+      city: json['city'],
+      neighborhood: json['neighborhood'],
+      state: json['state'],
     );
   }
 }

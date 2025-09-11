@@ -14,15 +14,13 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     final cartService = context.read<CartService>();
-    cartService.listCartItems(); // carrega o carrinho do backend
+    cartService.listCartItems();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Observa mudanças no CartService
     final cartService = context.watch<CartService>();
 
-    // Calcula o total
     double total = cartService.cartItems.fold(
       0,
       (sum, item) => sum + item.totalPrice,
@@ -128,26 +126,34 @@ class _CartPageState extends State<CartPage> {
                       ElevatedButton(
                         onPressed: () async {
                           final cartService = context.read<CartService>();
-                          final errorMessage = await cartService.buyItemsCart(
-                            0,
-                          ); // passe o productId se necessário
+                          final response = await cartService.buyItemsCart();
 
-                          if (errorMessage == null) {
-                            // Sucesso
+                          if (!mounted) return;
+
+                          if (response.hasError) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Pedido concluído com sucesso!"),
+                              SnackBar(
+                                content: Text(response.errorMessage!),
+                                backgroundColor: Colors.redAccent,
                               ),
                             );
-                          } else {
-                            // Erro
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Você precisa adicionar seu endereço. Redirecionando...')),
-                            );
 
-                            Future.delayed(Duration(seconds: 2), () {
-                              Navigator.pushNamed(context, '/address_page', arguments: false);
+                            Future.delayed(const Duration(seconds: 2), () {
+                              if (mounted) {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/address_page',
+                                  arguments: false,
+                                );
+                              }
                             });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(response.successMessage!),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(

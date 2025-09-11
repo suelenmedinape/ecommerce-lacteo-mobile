@@ -5,6 +5,8 @@ import 'package:ecommerce/client/service/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../service/responses.dart';
+
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
@@ -55,15 +57,31 @@ class MyDrawer extends StatelessWidget {
                 // 🔹 categorias
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
-                  child: FutureBuilder<List<String>>(
+                  // 1. Mude o tipo para esperar um ApiResponse que contém uma lista de Strings
+                  child: FutureBuilder<ApiResponse<List<String>>>(
                     future: productService.listCategory(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
+                      }
+                      // Erro de conexão/rede (o Future em si falhou)
+                      else if (snapshot.hasError) {
                         return Text('Erro: ${snapshot.error}');
-                      } else if (snapshot.hasData) {
-                        final categories = snapshot.data!;
+                      }
+                      // O Future completou, agora verificamos o ApiResponse
+                      else if (snapshot.hasData) {
+                        // 2. Acesse o ApiResponse a partir do snapshot
+                        final apiResponse = snapshot.data!;
+
+                        // 3. VERIFIQUE SE HÁ ERRO LÓGICO DENTRO DA RESPOSTA
+                        if (apiResponse.hasError) {
+                          return Text('Erro: ${apiResponse.errorMessage!}');
+                        }
+
+                        // 4. Se não houver erro, pegue a lista de dados de dentro do ApiResponse
+                        final categories = apiResponse.data!;
+
+                        // A partir daqui, seu código continua o mesmo, pois 'categories' é a lista
                         return ExpansionTile(
                           leading: const Icon(
                             Icons.category,
@@ -86,7 +104,7 @@ class MyDrawer extends StatelessWidget {
                           }).toList(),
                         );
                       } else {
-                        return const SizedBox();
+                        return const Text('Nenhuma categoria encontrada.');
                       }
                     },
                   ),

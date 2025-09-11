@@ -31,60 +31,62 @@ class _AddressPageState extends State<AddressPage> {
   bool _isDataInitialized = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    
-    // Usamos didChangeDependencies porque ele é chamado depois do initState
-    // e nos dá acesso seguro ao context. É o lugar ideal para usar ModalRoute.
-    // O `_isDataInitialized` previne que este código rode múltiplas vezes.
-    if (!_isDataInitialized) {
-      final arguments = ModalRoute.of(context)?.settings.arguments;
-      
-      // Verifica se o argumento é um booleano e se é true.
-      if (arguments is bool && arguments == true) {
-        setState(() {
-          _isEditingAddress = true;
-        });
-        // Se estiver editando, busca os dados para preencher o formulário.
-        _loadClientData();
-      }
-      _isDataInitialized = true;
+void didChangeDependencies() {
+  super.didChangeDependencies();
+
+  if (!_isDataInitialized) {
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+
+    // Se for true, entra no modo de edição
+    if (arguments is bool && arguments == true) {
+      setState(() {
+        _isEditingAddress = true;
+      });
     }
+
+    // 🔹 Sempre tenta carregar os dados do cliente
+    _loadClientData();
+
+    _isDataInitialized = true;
   }
+}
 
   // Método para carregar os dados do cliente e preencher os campos
   Future<void> _loadClientData() async {
-    final clientService = context.read<ClientService>();
-    
-    // Se o cliente ainda não foi carregado, carrega agora.
-    if (clientService.client == null) {
-      await clientService.clientDetail();
-    }
+  final clientService = context.read<ClientService>();
 
-    final clientData = clientService.client;
-    if (clientData != null && mounted) { // `mounted` verifica se o widget ainda está na tela
-      nameController.text = clientData.name;
-      phoneController.text = clientData.phone ?? '';
-      cpfController.text = clientData.cpf ?? '';
-      
-      if (clientData.address != null) {
-        streetController.text = clientData.address!.street;
-        numberController.text = clientData.address!.number;
-        cityController.text = clientData.address!.city;
-        neighborhoodController.text = clientData.address!.neighborhood;
-        stateController.text = clientData.address!.state;
-      }
+  if (clientService.client == null) {
+    await clientService.clientDetail();
+  }
+
+  final clientData = clientService.client;
+  if (clientData != null && mounted) {
+    nameController.text = clientData.name;
+    phoneController.text = clientData.phone ?? '';
+    cpfController.text = clientData.cpf ?? '';
+
+    if (clientData.address != null) {
+      streetController.text = clientData.address!.street;
+      numberController.text = clientData.address!.number; // <- deixe como String
+      cityController.text = clientData.address!.city;
+      neighborhoodController.text = clientData.address!.neighborhood;
+      stateController.text = clientData.address!.state;
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
     final clientService = context.watch<ClientService>();
-    
-    // Define o título da página dinamicamente
-    final pageTitle = _isEditingAddress ? "Editar Meus Dados" : "Adicionar Novo Endereço";
 
-    if (clientService.loading && _isEditingAddress && clientService.client == null) {
+    // Define o título da página dinamicamente
+    final pageTitle = _isEditingAddress
+        ? "Editar Meus Dados"
+        : "Adicionar Novo Endereço";
+
+    if (clientService.loading &&
+        _isEditingAddress &&
+        clientService.client == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
@@ -157,6 +159,7 @@ class _AddressPageState extends State<AddressPage> {
                 textButtonName: "Salvar",
                 loading: clientService.loading,
                 onTap: () async {
+                  // O mapa de dados continua o mesmo
                   final clientData = {
                     "name": nameController.text,
                     "phone": phoneController.text,
@@ -170,26 +173,34 @@ class _AddressPageState extends State<AddressPage> {
                     },
                   };
 
-                  final success = await clientService.updateDetailsClient(clientData);
+                  // 1. A variável agora é 'response' e armazena o ApiResponse
+                  final response = await clientService.updateDetailsClient(
+                    clientData,
+                  );
 
-                  if (success && mounted) {
+                  // É uma boa prática verificar se o widget ainda está montado logo após o 'await'
+                  if (!mounted) return;
+
+                  // 2. Verifique a propriedade 'hasError' da resposta
+                  if (response.hasError) {
+                    // Se deu ERRO, mostre a mensagem de erro específica do backend
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Dados salvos com sucesso!"),
+                      SnackBar(
+                        content: Text(response.errorMessage!),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
+                  } else {
+                    // Se deu SUCESSO, mostre a mensagem de sucesso do backend
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(response.successMessage!),
                         backgroundColor: Colors.green,
                       ),
                     );
-                    // 3. Padrão recomendado: Em vez de empurrar uma nova rota,
-                    // simplesmente volte para a tela anterior.
-                    // Isso torna seu componente muito mais reutilizável.
+
+                    // 3. A navegação acontece apenas no caso de sucesso
                     Navigator.pop(context);
-                  } else if (mounted) {
-                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Ocorreu um erro ao salvar."),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
                   }
                 },
               ),

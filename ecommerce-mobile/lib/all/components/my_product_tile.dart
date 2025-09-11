@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/client/models/products.dart';
 import 'package:ecommerce/client/service/cart_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'my_textfield.dart';
 
@@ -12,7 +13,8 @@ class MyProductTile extends StatelessWidget {
 
   void add(BuildContext context, int productId) {
     final controller = TextEditingController();
-    final CartService cartService = CartService();
+    // 1. Obtenha o service via Provider, não crie uma nova instância
+    final cartService = Provider.of<CartService>(context, listen: false);
 
     showDialog(
       context: context,
@@ -22,6 +24,7 @@ class MyProductTile extends StatelessWidget {
           controller: controller,
           hintText: 'Quantidade',
           obscureText: false,
+          keyboardType: TextInputType.number, // Melhor para quantidade
         ),
         actions: [
           TextButton(
@@ -32,21 +35,30 @@ class MyProductTile extends StatelessWidget {
           TextButton(
             onPressed: () async {
               final quantity = int.tryParse(controller.text) ?? 1;
+              Navigator.pop(context);
 
-              Navigator.pop(context); // fecha o diálogo
-
-              final success = await cartService.addToCart(quantity, productId);
+              // 2. A variável agora guarda o objeto ApiResponse completo
+              final response = await cartService.addToCart(quantity, productId);
 
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      success
-                          ? 'Produto adicionado ao carrinho!'
-                          : 'Erro ao adicionar.',
+                // 3. Verifique a propriedade 'hasError' da resposta
+                if (response.hasError) {
+                  // Se deu ERRO, mostre a mensagem de erro em um SnackBar vermelho
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(response.errorMessage!),
+                      backgroundColor: Colors.redAccent,
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  // Se deu SUCESSO, mostre a mensagem de sucesso em um SnackBar verde
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(response.successMessage!),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
               }
             },
             style: TextButton.styleFrom(foregroundColor: Colors.amber),
