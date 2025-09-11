@@ -1,6 +1,7 @@
 package com.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,11 @@ public class ClientService {
 
 	public Client findById(Long id) {
 		return clientRepository.findById(id).orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado"));
+	}
+	
+	public Client findBySupabaseId(UUID supabaseId) {
+	    return clientRepository.findBySupabaseId(supabaseId)
+	            .orElseThrow(() -> new ClientNotFoundException("Cliente não encontrado com o ID do Supabase: " + supabaseId));
 	}
 
 	public void updateClient(Long clientId, ClientUpdateDTO dto) {

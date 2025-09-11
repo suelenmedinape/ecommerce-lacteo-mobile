@@ -1,5 +1,7 @@
 package com.domain;
 
+import java.util.UUID;
+
 import com.enums.Role;
 
 import jakarta.persistence.CascadeType;
@@ -38,10 +40,9 @@ public class Person{
     @Column(nullable = false)
     private Role role;
 	
-	@Column(nullable = false, unique = true)
-    private String supabaseId;
+	@Column(name = "supabase_id", columnDefinition = "uuid")
+	private UUID supabaseId;
 
-	
 	public Person() {
 	}
 
@@ -93,11 +94,11 @@ public class Person{
 		this.role = role;
 	}
 
-	public String getSupabaseId() {
+	public UUID getSupabaseId() {
 		return supabaseId;
 	}
 
-	public void setSupabaseId(String supabaseId) {
+	public void setSupabaseId(UUID supabaseId) {
 		this.supabaseId = supabaseId;
 	}
 }

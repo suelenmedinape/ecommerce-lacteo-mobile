@@ -8,26 +8,28 @@ import com.enums.Category;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class ProductDTO{
-	
+public class ProductDTO {
+
 	private Long id;
-	
-    @NotBlank(message = "Nome não pode estar vazio.")
+
+	@NotBlank(message = "Nome não pode estar vazio.")
 	private String productName;
-	
-    @NotBlank(message = "Descrição não pode estar vazio.")
+
+	@NotBlank(message = "Descrição não pode estar vazio.")
 	private String description;
-	
-    @NotNull(message = "Preço não pode estar vazio.")
+
+	@NotNull(message = "Preço não pode estar vazio.")
 	private BigDecimal price;
-	
+
 	private Integer quantity;
-	
+
 	private Category category;
 
-	public ProductDTO(){	
+	private String imageUrl;
+
+	public ProductDTO() {
 	}
-	
+
 	public ProductDTO(Product product) {
 		this.id = product.getId();
 		this.productName = product.getProductName();
@@ -35,6 +37,7 @@ public class ProductDTO{
 		this.price = product.getPrice();
 		this.quantity = product.getQuantity();
 		this.category = product.getCategories();
+		this.imageUrl = product.getImageUrl();
 	}
 
 	public String getProductName() {
@@ -74,9 +77,9 @@ public class ProductDTO{
 	}
 
 	public void setCategory(String category) {
-	    this.category = Category.fromDescricao(category);
+		this.category = Category.fromDescricao(category);
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -85,4 +88,11 @@ public class ProductDTO{
 		this.id = id;
 	}
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }

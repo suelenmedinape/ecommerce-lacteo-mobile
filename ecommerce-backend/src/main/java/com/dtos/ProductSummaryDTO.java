@@ -12,17 +12,19 @@ public class ProductSummaryDTO {
 	private BigDecimal price;
 	private Integer quantity;
 	private Category category;
+	private String imageUrl;
 
 	public ProductSummaryDTO() {
 	}
 	
-	public ProductSummaryDTO(Long id, String productName, BigDecimal price, Integer quantity, Category category) {
+	public ProductSummaryDTO(Long id, String productName, BigDecimal price, Integer quantity, Category category, String imageUrl) {
 		super();
 		this.id = id;
 		this.productName = productName;
 		this.price = price;
 		this.quantity = quantity;
 		this.category = category;
+		this.imageUrl = imageUrl;
 	}
 
 
@@ -33,6 +35,7 @@ public class ProductSummaryDTO {
 		this.price = product.getPrice();
 		this.quantity = product.getQuantity();
 		this.category = product.getCategories();
+		this.imageUrl = product.getImageUrl();
 	}
 
 	public Long getId() {
@@ -57,5 +60,13 @@ public class ProductSummaryDTO {
 	
 	public Integer getQuantity() {
 		return quantity;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }

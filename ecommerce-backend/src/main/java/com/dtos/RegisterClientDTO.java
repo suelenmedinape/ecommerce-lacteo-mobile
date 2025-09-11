@@ -1,7 +1,11 @@
 package com.dtos;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class RegisterClientDTO {
@@ -14,8 +18,8 @@ public class RegisterClientDTO {
 	@Email(message = "Email inválido.")
 	private String email;
 
-	@NotBlank(message = "Supabase ID não pode estar vazio.")
-	private String supabaseId;
+	@NotNull(message = "O Supabase ID é obrigatório.")
+	private UUID supabaseId;
 
 	public RegisterClientDTO() {
 	}
@@ -36,11 +40,11 @@ public class RegisterClientDTO {
 		this.email = email;
 	}
 
-	public String getSupabaseId() {
+	public UUID getSupabaseId() {
 		return supabaseId;
 	}
 
-	public void setSupabaseId(String supabaseId) {
+	public void setSupabaseId(UUID supabaseId) {
 		this.supabaseId = supabaseId;
 	}
 }
