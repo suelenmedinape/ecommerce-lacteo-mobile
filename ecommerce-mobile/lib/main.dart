@@ -1,3 +1,4 @@
+import 'package:ecommerce/admin/pages/product_upload_test.dart';
 import 'package:ecommerce/client/pages/adderess_page.dart';
 import 'package:ecommerce/client/pages/byCategory_page.dart';
 import 'package:ecommerce/client/pages/cart_page.dart';
@@ -6,7 +7,6 @@ import 'package:ecommerce/client/pages/shop_page.dart';
 import 'package:ecommerce/client/service/cart_service.dart';
 import 'package:ecommerce/client/service/client_service.dart';
 import 'package:ecommerce/client/service/product_service.dart';
-import 'package:ecommerce/product_upload_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

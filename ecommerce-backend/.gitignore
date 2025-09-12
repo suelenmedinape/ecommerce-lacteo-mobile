@@ -18,6 +18,6 @@ maven-status/
 *.iws
 
 # Configurations
-#application.properties
+application-dev.properties
 #application.yml
 
